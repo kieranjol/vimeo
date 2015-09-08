@@ -1,4 +1,37 @@
-#!/bin/bash -x
+#!/bin/bash -x 
+
+echo "do you just want an SD bitc h264 Say Y or N?"
+read bitc
+if [[ "${bitc}" == "Y" || "${bitc}" == "y" ]] ; then
+
+framerate=($(ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate -of default=noprint_wrappers=1:nokey=1 "$1"))
+
+
+		#https://trac.ffmpeg.org/wiki/FFprobeTips
+		IFS=: read -a timecode < <(ffprobe -v error -show_entries stream_tags=timecode -of default=noprint_wrappers=1:nokey=1 "$1")
+		printf -v timecode "'%s\:%s\:%s\:%s'" "${timecode[@]}"
+		echo "$timecode"
+
+		drawtext_options=(
+		    fontsize=45
+		    fontfile="/Library/Fonts/Arial Black.ttf"
+		    fontcolor=white
+		    timecode="$timecode"
+		    rate="$framerate"
+		    boxcolor=0x000000AA
+		    box=1
+		    x=360-text_w/2
+		    y=480
+		)
+
+		drawtext_options=$(IFS=:; echo "${drawtext_options[*]}")
+		ffmpeg -i "$1" -c:v libx264 -crf 23 -pix_fmt yuv420p -vf \
+		    drawtext="$drawtext_options" \
+		    "${1}_BITC.mov"
+		
+		
+else
+		
 
 echo "codec? Choose things like h264, prores etc"
 read "codec";
@@ -44,3 +77,4 @@ fi
 
 ffmpeg -i "${1}" -map 0 ${videooptions} ${filteroptions} ${audiooptions} -dn "${1}_vimeo.${container}"
 
+fi
