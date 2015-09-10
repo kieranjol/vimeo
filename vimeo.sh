@@ -19,11 +19,6 @@ if [[ "${bitc}" == "Y" || "${bitc}" == "y" ]] ; then
 		textoptions=("fontsize=90:x=957-text_w/2:y=960")
 	fi
 	
-	
-	
-	
-
-
 framerate=($(ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate -of default=noprint_wrappers=1:nokey=1 "$1"))
 tctest=($(ffprobe -v error -select_streams v:0 -show_entries stream_tags=timecode -of default=noprint_wrappers=1:nokey=1 "$1"))
 if [[ "${tctest}" == "" ]] ; then
