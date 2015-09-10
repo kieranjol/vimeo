@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
 
-size=($(ffprobe -v error -select_streams v:0 -show_entries stream=height:stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$1"))
+size=($(ffprobe -v error -select_streams v:0 -show_entries stream=height -of default=noprint_wrappers=1:nokey=1 "$1"))
 	echo $size
 echo "do you just want an SD bitc h264 Say Y or N?"
 read bitc
@@ -21,7 +21,7 @@ if [[ "${bitc}" == "Y" || "${bitc}" == "y" ]] ; then
 
 framerate=($(ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate -of default=noprint_wrappers=1:nokey=1 "$1"))
 
-#ffprobe -v error -select_streams v:0 -show_entries format_tags=timecode:stream_tags=timecode -of default=noprint_wrappers=1:nokey=1 /Users/kieranoleary/Downloads/AS11_DPP_HD_OEM_SAMPLE_136_B.mxf will print either/or. may be times where none exist.
+#ffprobe -v error -select_streams v:0 -show_entries format_tags=timecode:stream_tags=timecode -of default=noprint_wrappers=1:nokey=1 B.mxf will print either/or. may be times where none exist.
 tctest=($(ffprobe -v error -select_streams v:0 -show_entries format_tags=timecode:stream_tags=timecode -of default=noprint_wrappers=1:nokey=1 "$1"))
 tctest2=($(ffprobe -v error -select_streams v:0 -show_entries stream_tags=timecode -of default=noprint_wrappers=1:nokey=1 "$1"))
 if [[ "${tctest}" == "" ]] ; then
