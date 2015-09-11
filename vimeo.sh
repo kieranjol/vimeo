@@ -22,7 +22,7 @@ if [[ "${bitc}" == "Y" || "${bitc}" == "y" ]] ; then
 framerate=($(ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate -of default=noprint_wrappers=1:nokey=1 "$1"))
 
 #ffprobe -v error -select_streams v:0 -show_entries format_tags=timecode:stream_tags=timecode -of default=noprint_wrappers=1:nokey=1 B.mxf will print either/or. may be times where none exist.
-tctest=($(ffprobe -v error -select_streams v:0 -show_entries format_tags=timecode:stream_tags=timecode -of default=noprint_wrappers=1:nokey=1 "$1"))
+tctest=($(ffprobe -v error -select_streams v:0 -show_entries format_tags=timecode:stream_tags=timecode -of default=noprint_wrappers=1:nokey=1 "$1")) ;exit
 tctest2=($(ffprobe -v error -select_streams v:0 -show_entries stream_tags=timecode -of default=noprint_wrappers=1:nokey=1 "$1"))
 if [[ "${tctest}" == "" ]] ; then
 	ffmpeg -i "$1" -c:v libx264 -crf 19 -pix_fmt yuv420p -vf drawtext="fontsize=45":"fontfile=/Library/Fonts/Arial\ Black.ttf:fontcolor=white:timecode='00\:00\:00\:00':rate=$framerate:boxcolor=0x000000AA:box=1:x=360-text_w/2:y=480" "$1_BITC.mov"
