@@ -1,22 +1,20 @@
 #!/bin/bash -x
 
 
-size=($(ffprobe -v error -select_streams v:0 -show_entries stream=height -of default=noprint_wrappers=1:nokey=1 "$1"))
-	echo $size
+
 echo "do you just want an SD bitc h264 Say Y or N?"
 read bitc
 if [[ "${bitc}" == "Y" || "${bitc}" == "y" ]] ; then
 
 
+	size=($(ffprobe -v error -select_streams v:0 -show_entries stream=height -of default=noprint_wrappers=1:nokey=1 "$1"))
+	wsize=($(ffprobe -v error -select_streams v:0 -show_entries stream=width -of default=noprint_wrappers=1:nokey=1 "$1"))
 
-	
-	if [[ "${size}" == "576" ]] ; then
-		textoptions=("fontsize=45:x=360-text_w/2:y=480")
-	elif [[ "${size}" == "486" || "${size}" == "480" ]] ; then
-		textoptions=("fontsize=45:x=360-text_w/2:y=400")
-	elif [[ "${size}" == "1080" || "${size}" == "1080" ]] ; then
-		textoptions=("fontsize=90:x=957-text_w/2:y=960")
-	fi
+	ycor=($(bc <<< $size/1.20))
+	xcor=($(bc <<< $wsize/2))
+	font=($(bc <<< $size/12))
+
+	textoptions=("fontsize=$font:x=$xcor-text_w/2:y=$ycor")
 
 
 framerate=($(ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate -of default=noprint_wrappers=1:nokey=1 "$1"))
@@ -36,7 +34,6 @@ fi
 		echo "$timecode"
 
 		drawtext_options=(
-		    fontsize=45
 		    fontfile="/Library/Fonts/Arial Black.ttf"
 		    fontcolor=white
 		    timecode="$timecode"
